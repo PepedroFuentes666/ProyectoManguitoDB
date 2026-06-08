@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4">Dashboard</h1>
+
+<div class="row g-4 mb-4">
+    <!-- Total Books -->
+    <div class="col-md-4">
+        <div class="card border-primary">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <span class="fs-4 me-2">📚</span>
+                <h2 class="h5 mb-0">Total Libros</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="display-4 fw-bold text-primary">{{ total_libros }}</span>
+                <p class="text-muted mb-0">libros registrados</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Loans -->
+    <div class="col-md-4">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <span class="fs-4 me-2">🔄</span>
+                <h2 class="h5 mb-0">Total Préstamos</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="display-4 fw-bold text-info">{{ total_prestamos }}</span>
+                <p class="text-muted mb-0">préstamos realizados</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Loans -->
+    <div class="col-md-4">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark d-flex align-items-center">
+                <span class="fs-4 me-2">⏳</span>
+                <h2 class="h5 mb-0">Préstamos Activos</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="display-4 fw-bold text-warning">{{ prestamos_activos }}</span>
+                <p class="text-muted mb-0">libros en circulación</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick links -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0">Acciones Rápidas</h2>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('books.listar') }}" class="btn btn-outline-primary">
+                        Ver Libros
+                    </a>
+                    <a href="{{ url_for('books.crear') }}" class="btn btn-outline-success">
+                        + Crear Libro
+                    </a>
+                    <a href="{{ url_for('loans.listar') }}" class="btn btn-outline-primary">
+                        Ver Préstamos
+                    </a>
+                    <a href="{{ url_for('loans.crear') }}" class="btn btn-outline-success">
+                        + Nuevo Préstamo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

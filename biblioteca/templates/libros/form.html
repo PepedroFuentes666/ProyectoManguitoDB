@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if libro else 'Crear' }} Libro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h1 class="h3 mb-4">{{ 'Editar Libro' if libro else 'Crear Nuevo Libro' }}</h1>
+
+        <form method="POST"
+              action="{{ url_for('books.editar', id=libro._id) if libro else url_for('books.crear') }}"
+              class="needs-validation" novalidate>
+            <!--
+                Server-side validation is enforced in book_service.py.
+                HTML5 'required' provides client-side feedback.
+                Flask-WTF is not used in this project.
+            -->
+
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="titulo" name="titulo"
+                       value="{{ form_data.titulo or libro.titulo or '' }}"
+                       required maxlength="200" autofocus>
+                <div class="invalid-feedback">El título es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="autor" class="form-label">Autor <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="autor" name="autor"
+                       value="{{ form_data.autor or libro.autor or '' }}"
+                       required maxlength="200">
+                <div class="invalid-feedback">El autor es obligatorio.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="isbn" class="form-label">ISBN <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="isbn" name="isbn"
+                       value="{{ form_data.isbn or libro.isbn or '' }}"
+                       required minlength="10" maxlength="20"
+                       placeholder="9780060934347">
+                <div class="invalid-feedback">ISBN debe tener al menos 10 caracteres.</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="anio_publicacion" class="form-label">Año de publicación</label>
+                    <input type="number" class="form-control" id="anio_publicacion"
+                           name="anio_publicacion"
+                           value="{{ form_data.anio_publicacion or libro.anio_publicacion or '' }}"
+                           min="1000" max="{{ current_year }}">
+                    <div class="form-text">Entre 1000 y {{ current_year }}.</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="genero" class="form-label">Género</label>
+                    <select class="form-select" id="genero" name="genero">
+                        <option value="">— Seleccionar —</option>
+                        {% set generos = [
+                            'Novela', 'Cuento', 'Poesía', 'Teatro', 'Ensayo',
+                            'Biografía', 'Historia', 'Filosofía',
+                            'Ciencia Ficción', 'Fantasía', 'Terror',
+                            'Infantil / Juvenil', 'Técnico / Científico',
+                        ] %}
+                        {% for g in generos %}
+                        <option value="{{ g }}"
+                                {{- ' selected' if (form_data and form_data.genero == g) or (libro and libro.genero == g) else '' }}>
+                            {{ g }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="editorial" class="form-label">Editorial</label>
+                <input type="text" class="form-control" id="editorial" name="editorial"
+                       value="{{ form_data.editorial or libro.editorial or '' }}"
+                       maxlength="200">
+            </div>
+
+            <div class="mb-3">
+                <label for="ejemplares_totales" class="form-label">Ejemplares totales</label>
+                <input type="number" class="form-control" id="ejemplares_totales"
+                       name="ejemplares_totales"
+                       value="{{ form_data.ejemplares_totales or libro.ejemplares_totales or '1' }}"
+                       min="1" required>
+                <div class="invalid-feedback">Debe haber al menos 1 ejemplar.</div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('books.listar') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'Guardar Cambios' if libro else 'Crear Libro' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Bootstrap 5 custom validation styles
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

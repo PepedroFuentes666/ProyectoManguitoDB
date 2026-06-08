@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Préstamos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Préstamos</h1>
+    <a href="{{ url_for('loans.crear') }}" class="btn btn-primary">
+        + Nuevo Préstamo
+    </a>
+</div>
+
+<!-- Filter tabs -->
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link {{ 'active' if filtro_actual == 'todos' }}"
+           href="{{ url_for('loans.listar', estado='todos') }}">
+           Todos
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ 'active' if filtro_actual == 'activos' }}"
+           href="{{ url_for('loans.listar', estado='activos') }}">
+           Activos
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ 'active' if filtro_actual == 'devueltos' }}"
+           href="{{ url_for('loans.listar', estado='devueltos') }}">
+           Devueltos
+        </a>
+    </li>
+</ul>
+
+{% if prestamos %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Libro</th>
+                <th>Usuario</th>
+                <th>Fecha Préstamo</th>
+                <th>Fecha Devolución</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in prestamos %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('books.detalle', id=p.libro_id) }}">
+                        {{ p.libro_titulo }}
+                    </a>
+                </td>
+                <td>{{ p.usuario_nombre }}</td>
+                <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y %H:%M') if p.fecha_prestamo else '—' }}</td>
+                <td>{{ p.fecha_devolucion.strftime('%d/%m/%Y %H:%M') if p.fecha_devolucion else 'Pendiente' }}</td>
+                <td class="text-center">
+                    <span class="badge bg-{{ 'success' if p.estado == 'devuelto' else 'warning' }}">
+                        {{ 'Devuelto' if p.estado == 'devuelto' else 'Activo' }}
+                    </span>
+                </td>
+                <td class="text-center">
+                    {% if p.estado == 'activo' %}
+                    <form method="POST"
+                          action="{{ url_for('loans.devolver', id=p._id) }}"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-outline-success"
+                                onclick="return confirm('¿Confirmar devolución de «{{ p.libro_titulo }}»?')">
+                            Devolver
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info text-center" role="alert">
+    {% if filtro_actual == 'activos' %}
+        No hay préstamos activos.
+    {% elif filtro_actual == 'devueltos' %}
+        No hay préstamos devueltos.
+    {% else %}
+        No hay préstamos registrados.
+        <a href="{{ url_for('loans.crear') }}" class="alert-link">Crear el primer préstamo</a>.
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

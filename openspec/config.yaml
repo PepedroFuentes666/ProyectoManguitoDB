@@ -1,0 +1,48 @@
+# openspec/config.yaml
+schema: spec-driven
+
+context: |
+  Project: ProyectoManguitoDB
+  Type: University project — MongoDB 7 web application
+  Features: login, CRUDs, authentication
+  Stack: Python 3.12+ / Flask / PyMongo / MongoDB 7 (Atlas MO)
+  Architecture: Flask Blueprints, PyMongo direct driver, Jinja2 templates, Flask-Login auth
+  Testing: none installed yet (pytest planned)
+  Conventions: PEP 8, Flask project pattern (blueprints, app factory), Bootstrap 5 for UI
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns once established
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+
+testing:
+  strict_tdd: false
+  runner: none detected
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage: false
+  quality:
+    linter: false
+    type_checker: false
+    formatter: false
+  note: "No test runner or quality tools available. Strict TDD disabled. Revisit after stack selection."

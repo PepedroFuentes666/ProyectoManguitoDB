@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Préstamo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <h1 class="h3 mb-4">Nuevo Préstamo</h1>
+
+        <form method="POST" action="{{ url_for('loans.crear') }}"
+              class="needs-validation" novalidate>
+
+            <!-- Book dropdown -->
+            <div class="mb-3">
+                <label for="libro_id" class="form-label">Libro <span class="text-danger">*</span></label>
+                <select class="form-select" id="libro_id" name="libro_id" required>
+                    <option value="">— Seleccionar libro —</option>
+                    {% for libro in libros %}
+                    <option value="{{ libro._id }}"
+                            {{- ' selected' if form_data and form_data.libro_id == libro._id|string else '' }}>
+                        {{ libro.titulo }} — {{ libro.autor }}
+                        ({{ libro.ejemplares_disponibles }} disp.)
+                    </option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Debes seleccionar un libro.</div>
+            </div>
+
+            <!-- User info (read-only) -->
+            <div class="mb-3">
+                <label for="usuario" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="usuario"
+                       value="{{ current_user.email }}" readonly disabled>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('loans.listar') }}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">
+                    Crear Préstamo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Bootstrap 5 custom validation styles
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

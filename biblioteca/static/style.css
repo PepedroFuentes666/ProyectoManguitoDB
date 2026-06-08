@@ -1,0 +1,27 @@
+/* Custom styles for Biblioteca ManguitoDB */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.table th {
+    background-color: #f1f3f5;
+}
+
+.badge {
+    font-size: 0.85em;
+}
+
+.alert {
+    border-radius: 8px;
+}

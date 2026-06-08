@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ libro.titulo }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Book info card -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0">{{ libro.titulo }}</h2>
+                {% if libro.ejemplares_disponibles is defined %}
+                <span class="badge bg-{{ 'success' if libro.ejemplares_disponibles > 0 else 'secondary' }} fs-6">
+                    {{ libro.ejemplares_disponibles }} / {{ libro.ejemplares_totales }} disponibles
+                </span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Autor</dt>
+                    <dd class="col-sm-9">{{ libro.autor }}</dd>
+
+                    <dt class="col-sm-3">ISBN</dt>
+                    <dd class="col-sm-9"><code>{{ libro.isbn }}</code></dd>
+
+                    {% if libro.genero %}
+                    <dt class="col-sm-3">Género</dt>
+                    <dd class="col-sm-9">{{ libro.genero }}</dd>
+                    {% endif %}
+
+                    {% if libro.editorial %}
+                    <dt class="col-sm-3">Editorial</dt>
+                    <dd class="col-sm-9">{{ libro.editorial }}</dd>
+                    {% endif %}
+
+                    {% if libro.anio_publicacion %}
+                    <dt class="col-sm-3">Año de publicación</dt>
+                    <dd class="col-sm-9">{{ libro.anio_publicacion }}</dd>
+                    {% endif %}
+
+                    <dt class="col-sm-3">Ejemplares totales</dt>
+                    <dd class="col-sm-9">{{ libro.ejemplares_totales }}</dd>
+
+                    <dt class="col-sm-3">Agregado</dt>
+                    <dd class="col-sm-9">{{ libro.fecha_creacion.strftime('%d/%m/%Y %H:%M') if libro.fecha_creacion else '—' }}</dd>
+
+                    <dt class="col-sm-3">Última actualización</dt>
+                    <dd class="col-sm-9">{{ libro.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') if libro.fecha_actualizacion else '—' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Loan history section -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Historial de Préstamos</h3>
+            </div>
+            <div class="card-body">
+                {% if prestamos %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha de préstamo</th>
+                                <th>Fecha de devolución</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in prestamos %}
+                            <tr>
+                                <td>{{ p.usuario_nombre }}</td>
+                                <td>{{ p.fecha_prestamo.strftime('%d/%m/%Y') if p.fecha_prestamo else '—' }}</td>
+                                <td>{{ p.fecha_devolucion.strftime('%d/%m/%Y') if p.fecha_devolucion else '—' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if p.estado == 'devuelto' else 'warning' }}">
+                                        {{ 'Devuelto' if p.estado == 'devuelto' else 'Activo' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">Este libro no tiene préstamos registrados.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar actions -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Acciones</h3>
+            </div>
+            <div class="card-body d-grid gap-2">
+                <a href="{{ url_for('books.editar', id=libro._id) }}" class="btn btn-warning">
+                    Editar Libro
+                </a>
+                <a href="{{ url_for('books.confirmar_eliminar', id=libro._id) }}" class="btn btn-outline-danger">
+                    Eliminar Libro
+                </a>
+                <a href="{{ url_for('books.listar') }}" class="btn btn-outline-secondary">
+                    Volver a Libros
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

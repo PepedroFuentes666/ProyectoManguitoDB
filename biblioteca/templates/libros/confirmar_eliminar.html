@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Eliminar {{ libro.titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h2 class="h5 mb-0">Confirmar Eliminación</h2>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">
+                    ¿Estás seguro de que deseas eliminar el siguiente libro?
+                </p>
+
+                <dl class="row mb-3">
+                    <dt class="col-sm-4">Título</dt>
+                    <dd class="col-sm-8">{{ libro.titulo }}</dd>
+
+                    <dt class="col-sm-4">Autor</dt>
+                    <dd class="col-sm-8">{{ libro.autor }}</dd>
+
+                    <dt class="col-sm-4">ISBN</dt>
+                    <dd class="col-sm-8"><code>{{ libro.isbn }}</code></dd>
+
+                    <dt class="col-sm-4">Ejemplares</dt>
+                    <dd class="col-sm-8">{{ libro.ejemplares_disponibles }} / {{ libro.ejemplares_totales }}</dd>
+                </dl>
+
+                {% if active_loans > 0 %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>⚠ Atención:</strong> Este libro tiene <strong>{{ active_loans }}</strong>
+                    préstamo(s) activo(s). No se puede eliminar hasta que todos los ejemplares
+                    sean devueltos.
+                </div>
+                <a href="{{ url_for('books.detalle', id=libro._id) }}" class="btn btn-secondary">
+                    Volver al detalle
+                </a>
+                {% else %}
+                <form method="POST" action="{{ url_for('books.eliminar', id=libro._id) }}">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('books.detalle', id=libro._id) }}" class="btn btn-secondary">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            Confirmar eliminación
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
