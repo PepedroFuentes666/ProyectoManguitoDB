@@ -1,1 +1,1 @@
-"""Biblioteca ManguitoDB — Flask + MongoDB library lending system."""
+"""Biblioteca ManguitoDB - Flask + MongoDB library lending system."""
