@@ -3,7 +3,7 @@ services:
     name: biblioteca-app
     runtime: python
     buildCommand: pip install -r biblioteca/requirements.txt
-    startCommand: gunicorn biblioteca.app:create_app()
+    startCommand: gunicorn wsgi:app
     envVars:
       - key: MONGODB_URI
         sync: false
